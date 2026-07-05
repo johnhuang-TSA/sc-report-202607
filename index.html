@@ -1,0 +1,266 @@
+<title>愛旺斯缺貨風險分析報告 2026/07</title>
+<style>
+  :root {
+    --paper: #FCFCFA;
+    --ink: #20241F;
+    --muted: #6E7570;
+    --accent: #206352;
+    --accent-soft: #E3EEEA;
+    --critical: #B23A2E;
+    --critical-soft: #F7E9E6;
+    --warn: #B07818;
+    --line: #E4E6E1;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--paper); }
+  body {
+    font-family: "PingFang TC", "Noto Sans TC", "Microsoft JhengHei", "微軟正黑體", sans-serif;
+    color: var(--ink);
+    background: var(--paper);
+    line-height: 1.6;
+    font-size: 14px;
+  }
+  .page { max-width: 940px; margin: 0 auto; padding: 40px 32px 48px; }
+
+  /* ── 頁首 ── */
+  header { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; padding-bottom: 18px; border-bottom: 3px solid var(--ink); }
+  .eyebrow { font-size: 12px; letter-spacing: .18em; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+  h1 { font-size: 26px; font-weight: 800; letter-spacing: .02em; text-wrap: balance; line-height: 1.3; }
+  .meta { text-align: right; font-size: 12px; color: var(--muted); white-space: nowrap; line-height: 1.8; }
+
+  /* ── KPI ── */
+  .kpis { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 24px 0 8px; }
+  .kpi { border: 1px solid var(--line); background: #fff; padding: 14px 16px 12px; }
+  .kpi .label { font-size: 12px; color: var(--muted); letter-spacing: .06em; }
+  .kpi .value { font-size: 27px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -.01em; margin-top: 2px; }
+  .kpi .sub { font-size: 11.5px; color: var(--muted); margin-top: 2px; }
+  .kpi.critical .value { color: var(--critical); }
+  .kpi.accent .value { color: var(--accent); }
+  .leverage { margin: 10px 0 0; font-size: 13px; background: var(--accent-soft); border-left: 4px solid var(--accent); padding: 9px 14px; }
+  .leverage strong { color: var(--accent); }
+
+  /* ── 區段標題 ── */
+  h2 { font-size: 15px; font-weight: 800; letter-spacing: .04em; margin: 30px 0 4px; display: flex; align-items: baseline; gap: 10px; }
+  h2 .note { font-size: 12px; font-weight: 400; color: var(--muted); letter-spacing: 0; }
+
+  /* ── 主表 ── */
+  .tablewrap { overflow-x: auto; margin-top: 10px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 860px; }
+  thead th {
+    text-align: right; font-size: 11.5px; color: var(--muted); font-weight: 600;
+    padding: 6px 8px; border-bottom: 2px solid var(--ink); white-space: nowrap; letter-spacing: .03em;
+  }
+  thead th:first-child, thead th.left { text-align: left; }
+  tbody td { padding: 7px 8px; border-bottom: 1px solid var(--line); text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tbody td:first-child { text-align: left; font-weight: 600; white-space: normal; min-width: 150px; }
+  tbody tr.urgent td:first-child { border-left: 4px solid var(--critical); padding-left: 10px; }
+  tbody tr td:first-child { border-left: 4px solid transparent; padding-left: 10px; }
+  .cat { display: inline-block; font-size: 10.5px; color: var(--muted); font-weight: 400; margin-right: 4px; }
+
+  /* 逐月缺貨熱點 */
+  .months { display: inline-flex; gap: 3px; }
+  .m { width: 20px; height: 16px; display: inline-flex; align-items: center; justify-content: center; font-size: 9.5px; color: #C6CBC5; background: #F3F4F1; }
+  .m.hit { background: var(--critical); color: #fff; font-weight: 700; }
+  .m.hit.first { outline: 2px solid var(--critical); outline-offset: 1px; }
+
+  /* 營收損失長條 */
+  .barcell { min-width: 150px; }
+  .bar { display: flex; align-items: center; gap: 8px; justify-content: flex-end; }
+  .bar .track { width: 90px; height: 9px; background: #F0F1EE; }
+  .bar .fill { height: 100%; background: var(--accent); }
+  tr.urgent .bar .fill { background: var(--critical); }
+
+  tfoot td { padding: 9px 8px; font-weight: 800; text-align: right; border-top: 2px solid var(--ink); font-variant-numeric: tabular-nums; white-space: nowrap; }
+  tfoot td:first-child { text-align: left; padding-left: 10px; }
+
+  /* ── 發現 ── */
+  .findings { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 10px; }
+  .finding { border: 1px solid var(--line); background: #fff; padding: 14px 16px; font-size: 12.5px; line-height: 1.65; }
+  .finding h3 { font-size: 13px; font-weight: 800; margin-bottom: 6px; }
+  .finding .tag { display: inline-block; font-size: 10.5px; font-weight: 700; letter-spacing: .08em; padding: 1px 8px; margin-bottom: 8px; }
+  .finding .tag.warn { background: #F6EEDC; color: var(--warn); }
+  .finding .tag.crit { background: var(--critical-soft); color: var(--critical); }
+  .finding .tag.info { background: var(--accent-soft); color: var(--accent); }
+  .finding .num { font-variant-numeric: tabular-nums; font-weight: 700; }
+  .finding ul { padding-left: 16px; margin-top: 4px; }
+
+  /* ── 註腳 ── */
+  .caveats { margin-top: 26px; padding-top: 12px; border-top: 1px solid var(--line); font-size: 11.5px; color: var(--muted); }
+  .caveats li { margin-left: 16px; }
+
+  @media (max-width: 760px) {
+    .kpis { grid-template-columns: 1fr 1fr; }
+    .findings { grid-template-columns: 1fr; }
+    header { flex-direction: column; align-items: flex-start; }
+    .meta { text-align: left; }
+  }
+  @media print {
+    .page { padding: 0; max-width: none; }
+    body { font-size: 12px; }
+    .kpi .value { font-size: 22px; }
+  }
+</style>
+
+<div class="page">
+  <header>
+    <div>
+      <div class="eyebrow">供應鏈庫存風險報告</div>
+      <h1>愛旺斯（Advance）缺貨風險分析<br>預估至 2026/11，10 個品項面臨缺貨</h1>
+    </div>
+    <div class="meta">
+      報告日期：2026/07/06<br>
+      資料來源：愛旺斯分析表「分析」分頁（新得利 6/26 庫存 + 預銷表推估）<br>
+      涵蓋品項：全系列 23 項
+    </div>
+  </header>
+
+  <div class="kpis">
+    <div class="kpi critical">
+      <div class="label">缺貨風險品項（至 26/11）</div>
+      <div class="value">10 / 23</div>
+      <div class="sub">週轉天數 30 天以下即列入風險</div>
+    </div>
+    <div class="kpi critical">
+      <div class="value">1,077 件</div>
+      <div class="label" style="order:-1">預計缺貨總數量</div>
+      <div class="sub">採購以 10 件進位，實際下單 1,120 件</div>
+    </div>
+    <div class="kpi">
+      <div class="label">預計採購金額（含稅）</div>
+      <div class="value">NT$ 264,136</div>
+      <div class="sub">以原廠成本 +10% 估算；萬達報價見發現 2</div>
+    </div>
+    <div class="kpi accent">
+      <div class="label">可保住的潛在營收（含稅）</div>
+      <div class="value">NT$ 999,745</div>
+      <div class="sub">缺貨數量 × 售價</div>
+    </div>
+  </div>
+  <p class="leverage">投入約 <strong>26.4 萬</strong>採購成本，可保住接近 <strong>100 萬</strong>營收，槓桿約 <strong>3.8 倍</strong>。</p>
+
+  <h2>風險品項明細 <span class="note">依缺貨數量排序｜紅框 = 首次缺貨月｜左側紅線 = 最急迫品項</span></h2>
+  <div class="tablewrap">
+    <table>
+      <thead>
+        <tr>
+          <th>品項</th>
+          <th class="left">缺貨月份（26/07–11）</th>
+          <th>缺貨量</th>
+          <th>原廠成本<br>(未稅)</th>
+          <th>採購金額<br>(含稅)</th>
+          <th>售價<br>(含稅)</th>
+          <th class="barcell">潛在營收損失</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="urgent">
+          <td><span class="cat">日常照護</span>成貓雞肉配方 1.5kg</td>
+          <td style="text-align:left"><span class="months"><span class="m hit first">7</span><span class="m hit">8</span><span class="m hit">9</span><span class="m hit">10</span><span class="m hit">11</span></span></td>
+          <td>468</td><td>154</td><td>83,546</td><td>775</td>
+          <td class="barcell"><span class="bar"><span class="track"><span class="fill" style="width:100%"></span></span>362,700</span></td>
+        </tr>
+        <tr>
+          <td><span class="cat">日常照護</span>中型熟齡犬雞肉配方 3kg</td>
+          <td style="text-align:left"><span class="months"><span class="m">7</span><span class="m">8</span><span class="m">9</span><span class="m hit first">10</span><span class="m hit">11</span></span></td>
+          <td>133</td><td>275</td><td>44,447</td><td>1,195</td>
+          <td class="barcell"><span class="bar"><span class="track"><span class="fill" style="width:44%"></span></span>158,935</span></td>
+        </tr>
+        <tr>
+          <td><span class="cat">日常照護</span>小型幼犬雞肉配方 3kg</td>
+          <td style="text-align:left"><span class="months"><span class="m">7</span><span class="m">8</span><span class="m">9</span><span class="m">10</span><span class="m hit first">11</span></span></td>
+          <td>85</td><td>281</td><td>29,169</td><td>1,220</td>
+          <td class="barcell"><span class="bar"><span class="track"><span class="fill" style="width:29%"></span></span>103,700</span></td>
+        </tr>
+        <tr>
+          <td><span class="cat">保健機能</span>絕育成貓化毛火雞肉配方 1.5kg</td>
+          <td style="text-align:left"><span class="months"><span class="m">7</span><span class="m">8</span><span class="m">9</span><span class="m hit first">10</span><span class="m hit">11</span></span></td>
+          <td>109</td><td>183</td><td>23,278</td><td>905</td>
+          <td class="barcell"><span class="bar"><span class="track"><span class="fill" style="width:27%"></span></span>98,645</span></td>
+        </tr>
+        <tr>
+          <td><span class="cat">保健照護</span>絕育成貓低敏鮭魚配方 1.5kg</td>
+          <td style="text-align:left"><span class="months"><span class="m">7</span><span class="m">8</span><span class="m">9</span><span class="m hit first">10</span><span class="m hit">11</span></span></td>
+          <td>103</td><td>197</td><td>25,035</td><td>855</td>
+          <td class="barcell"><span class="bar"><span class="track"><span class="fill" style="width:24%"></span></span>88,065</span></td>
+        </tr>
+        <tr>
+          <td><span class="cat">日常照護</span>幼母貓雞肉配方 1.5kg</td>
+          <td style="text-align:left"><span class="months"><span class="m">7</span><span class="m">8</span><span class="m">9</span><span class="m hit first">10</span><span class="m hit">11</span></span></td>
+          <td>106</td><td>175</td><td>22,193</td><td>790</td>
+          <td class="barcell"><span class="bar"><span class="track"><span class="fill" style="width:23%"></span></span>83,740</span></td>
+        </tr>
+        <tr>
+          <td><span class="cat">日常照護</span>小型熟齡犬雞肉配方 3kg</td>
+          <td style="text-align:left"><span class="months"><span class="m">7</span><span class="m">8</span><span class="m">9</span><span class="m">10</span><span class="m hit first">11</span></span></td>
+          <td>39</td><td>296</td><td>13,654</td><td>1,320</td>
+          <td class="barcell"><span class="bar"><span class="track"><span class="fill" style="width:14%"></span></span>51,480</span></td>
+        </tr>
+        <tr>
+          <td><span class="cat">保健機能</span>小型成犬體重維持雞肉配方 3kg</td>
+          <td style="text-align:left"><span class="months"><span class="m">7</span><span class="m">8</span><span class="m">9</span><span class="m">10</span><span class="m hit first">11</span></span></td>
+          <td>28</td><td>362</td><td>12,540</td><td>1,435</td>
+          <td class="barcell"><span class="bar"><span class="track"><span class="fill" style="width:11%"></span></span>40,180</span></td>
+        </tr>
+        <tr>
+          <td><span class="cat">犬處方</span>低敏感處方糧 2.5kg</td>
+          <td style="text-align:left"><span class="months"><span class="m">7</span><span class="m">8</span><span class="m">9</span><span class="m">10</span><span class="m hit first">11</span></span></td>
+          <td>3</td><td>487</td><td>5,625</td><td>2,070</td>
+          <td class="barcell"><span class="bar"><span class="track"><span class="fill" style="width:2%"></span></span>6,210</span></td>
+        </tr>
+        <tr>
+          <td><span class="cat">犬處方</span>腎臟配方 3kg</td>
+          <td style="text-align:left"><span class="months"><span class="m">7</span><span class="m">8</span><span class="m">9</span><span class="m">10</span><span class="m hit first">11</span></span></td>
+          <td>3</td><td>402</td><td>4,649</td><td>2,030</td>
+          <td class="barcell"><span class="bar"><span class="track"><span class="fill" style="width:2%"></span></span>6,090</span></td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td>合計（10 品項）</td>
+          <td></td>
+          <td>1,077</td><td>—</td><td>264,136</td><td>—</td>
+          <td>999,745</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <p style="font-size:12px; color:var(--muted); margin-top:8px;">
+    最急迫：<strong style="color:var(--critical)">成貓雞肉配方 1.5kg 於 7 月即開始缺貨</strong>（26/07 期末庫存 −18，至 26/12 累計 −598），單品占總缺貨量 43%、潛在營收損失 36%。其餘 9 項自 10–11 月起缺貨。
+  </p>
+
+  <h2>驗證發現與決策提醒</h2>
+  <div class="findings">
+    <div class="finding">
+      <span class="tag info">發現 1｜採購量進位規則</span>
+      <h3>金額以「進位到 10 件」計算</h3>
+      由採購金額反推，各品項採購量為缺貨量無條件進位至下一個 10 件（3→10、28→30、468→470…），實際下單量合計 <span class="num">1,120 件</span>，與缺貨量 <span class="num">1,077 件</span>不同。低敏感處方糧與犬腎臟配方缺貨僅各 3 件，仍按 10 件計價。
+    </div>
+    <div class="finding">
+      <span class="tag crit">發現 2｜報價基礎不一致</span>
+      <h3>萬達實際報價高於「原廠 +10%」</h3>
+      表內金額以原廠成本 +10% 含稅計算（<span class="num">264,136</span>）。但萬達首次報約為原廠成本 <span class="num">1.18–1.25 倍</span>、二次報約 <span class="num">1.16 倍</span>。若依萬達首次報採購，同量成本約 <span class="num">NT$ 286,855</span>（+22,719，<span class="num">+8.6%</span>）。呈報時建議註明 264,136 為偏低的假設值。
+    </div>
+    <div class="finding">
+      <span class="tag warn">發現 3｜12 月風險擴大</span>
+      <h3>時間拉到 26/12 將增至 14 項</h3>
+      另有 4 項於 12 月轉負庫存、未列入本次採購：
+      <ul>
+        <li>犬處方 泌尿配方 3kg（−23）</li>
+        <li>犬處方 腸胃敏感處方糧 3kg（−17）</li>
+        <li>保健 小型低敏犬鮭魚配方 3kg（−31）</li>
+        <li>日常 小型成犬雞肉配方 3kg（−54）</li>
+      </ul>
+      若到貨期較長，建議一併納入本單。
+    </div>
+  </div>
+
+  <div class="caveats">
+    <strong>假設與注意事項</strong>
+    <ul>
+      <li>缺貨推估依據「分析」分頁之預銷表：以 26/04–26/06 實際出貨為基礎的逐月預估出貨，週轉天數 30 天以下（紅底）視為缺貨風險。</li>
+      <li>採購金額公式：進位後採購量 × 原廠成本（未稅）× 1.1 × 1.05（營業稅）；採購對象為萬達（非原廠、非愛旺斯）。</li>
+      <li>本報告數字以試算表顯示值（已四捨五入）重新加總計算，個位數與表內公式可能有 1–2 元差異。</li>
+      <li>庫存基準：新得利 6/26 18:00 A1001 倉；已計入 7/1 預計進貨（momo 期望到倉日 7/2）。</li>
+    </ul>
+  </div>
+</div>
